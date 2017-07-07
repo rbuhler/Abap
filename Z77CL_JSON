@@ -1,0 +1,60 @@
+class Z77CL_JSON definition
+  public
+  final
+  create public .
+
+public section.
+
+  class-methods LOAD_JSON
+    importing
+      !IV_DOCNUM type J_1BDOCNUM
+    returning
+      value(RV_JSON) type STRING .
+  class-methods LOAD_DDIC
+    importing
+      !IV_JSON type STRING
+    returning
+      value(RT_ACTIVE) type J_1BNFE_ACTIVE .
+protected section.
+private section.
+ENDCLASS.
+
+
+
+CLASS Z77CL_JSON IMPLEMENTATION.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Static Public Method Z77CL_JSON=>LOAD_DDIC
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IV_JSON                        TYPE        STRING
+* | [<-()] RT_ACTIVE                      TYPE        J_1BNFE_ACTIVE
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method LOAD_DDIC.
+* https://wiki.scn.sap.com/wiki/display/Snippets/One+more+ABAP+to+JSON+Serializer+and+Deserializer
+
+*   deserialize JSON string json into internal table lt_flight doing camelCase to ABAP like field name mapping
+  /ui2/cl_json=>deserialize( EXPORTING json = iv_json pretty_name = /ui2/cl_json=>pretty_mode-camel_case CHANGING data = rt_active ).
+
+  endmethod.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Static Public Method Z77CL_JSON=>LOAD_JSON
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IV_DOCNUM                      TYPE        J_1BDOCNUM
+* | [<-()] RV_JSON                        TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method LOAD_JSON.
+  DATA ls_active TYPE J_1BNFE_ACTIVE.
+  DATA lt_active TYPE TABLE OF J_1BNFE_ACTIVE.
+
+  SELECT SINGLE * FROM J_1BNFE_ACTIVE
+                  INTO ls_active
+                 WHERE docnum = iv_docnum.
+  APPEND ls_active TO lt_active.
+
+  rv_json = /ui2/cl_json=>serialize( data = lt_active compress = abap_true pretty_name = /ui2/cl_json=>pretty_mode-camel_case ).
+
+  endmethod.
+ENDCLASS.
