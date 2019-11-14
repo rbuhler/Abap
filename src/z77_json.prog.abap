@@ -8,7 +8,7 @@ REPORT Z77_JSON.
 
   DATA ls_active TYPE j_1bnfe_active.
   DATA lv_json   TYPE string.
-
+* Testing ABAP Git
 * Serialize
   lv_json = Z77CL_JSON=>load_json( iv_docnum = lv_docnum ).
 * deSerialize
