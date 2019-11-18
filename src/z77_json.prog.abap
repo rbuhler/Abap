@@ -14,4 +14,5 @@ REPORT Z77_JSON.
 * deSerialize
   ls_active = Z77CL_JSON=>load_ddic( iv_json = lv_json ).
 
+* Linha nova
   BREAK-POINT.
